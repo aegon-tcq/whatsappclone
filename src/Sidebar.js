@@ -113,7 +113,7 @@ function Sidebar() {
                         name={allUserDetails[chat.data.chatUser].displayName}
                         iconUrl={allUserDetails[chat.data.chatUser].photoURL}
                         chatId={chat.data.chatId}
-                        lastMessage='message'
+                        lastMessage={chat.data.chatUser}
                     />
                 )) : <div className='sidebar__noMessages'>
                     <p>No messages yet!</p>

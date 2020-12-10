@@ -100,3 +100,9 @@
     padding: 10px;
     color: gray;
   }
+  .chat__footer > .chat__emojiPicker > .emoji-mart emoji-mart-light  {
+    position: relative;
+    margin-bottom: auto;
+    align-items: center;
+    justify-content: center;
+  }

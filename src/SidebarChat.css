@@ -17,6 +17,10 @@ a {
   margin-bottom: 8px;
 }
 
+.sidebarChat__info> p {
+  color: #525252;
+  font-size: 10px;
+}
 .sidebarChat__info {
   margin-left: 15px;
 }

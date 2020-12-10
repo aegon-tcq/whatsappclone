@@ -11,6 +11,10 @@ import { useParams } from "react-router-dom";
 import db from './firebase'
 import { useStateValue } from "./StateProvider";
 import firebase from 'firebase'
+import "emoji-mart/css/emoji-mart.css";
+import { Picker } from "emoji-mart";
+
+
 
 function Chat() {
 
@@ -21,7 +25,16 @@ function Chat() {
     const [messages, setMessages] = useState([]);
     const [{ user }, dispatch] = useStateValue();
     const [chatUserId, setChatUserId] = useState(chatId);
+    const [showEmoji, setShowEmoji] = useState(false);
 
+    const togglemoji = () => {
+        setShowEmoji(!showEmoji)
+    }
+    const changeInput = (e) => {
+        let emoji = e.native;
+        setInput(input + emoji)
+        togglemoji()
+    }
     useEffect(() => {
         console.log(groupId, chatId, 'setid', chatUserId)
         if (groupId) {
@@ -35,7 +48,7 @@ function Chat() {
                 })
 
             if (chatUserId !== 'undefined') {
-                console.log('chatId',chatId)
+                console.log('chatId', chatId)
                 setChatUserId(chatId)
                 console.log('chatId found', typeof chatUserId)
                 console.log('chatId found', groupId)
@@ -47,13 +60,13 @@ function Chat() {
     }, [groupId])
 
     useEffect(() => {
-            console.log('inside get message', chatUserId)
-            db.collection('userChatings')
-                .doc(chatUserId)
-                .collection('messages')
-                .orderBy('timestamp', 'asc')
-                .onSnapshot(snapshot => setMessages(snapshot.docs.map((doc) => doc.data())))
-        
+        console.log('inside get message', chatUserId)
+        db.collection('userChatings')
+            .doc(chatUserId)
+            .collection('messages')
+            .orderBy('timestamp', 'asc')
+            .onSnapshot(snapshot => setMessages(snapshot.docs.map((doc) => doc.data())))
+
     }, [chatUserId])
 
     const sendMessage = (e) => {
@@ -110,7 +123,8 @@ function Chat() {
                     src={groupIcon} />
                 <div className='chat__headerInfo' >
                     <h3>{groupName}</h3>
-                    <p>Last seen...</p>
+                    {/* <p>{new Date(messages[0].timestamp?.toDate()).toUTCString()}</p> */}
+
                 </div>
                 <div className='chat__headerRight' >
                     <IconButton>
@@ -137,7 +151,20 @@ function Chat() {
                 ))}
             </div>
             <div className='chat__footer' >
-                <InsertEmoticonIcon />
+
+                {showEmoji ?
+                    <span style={styles.picker} >
+                        <Picker
+                            onSelect={changeInput}
+                            emojiTooltip={true}
+                            title="weChat"
+                        />
+                    </span> : null}
+                <IconButton>
+                    <InsertEmoticonIcon onClick={togglemoji} />
+                </IconButton>
+
+
                 <form
                     onSubmit={sendMessage}
                 >
@@ -153,6 +180,7 @@ function Chat() {
                         Send a message
           </button>
                 </form>
+
                 <MicIcon />
             </div>
         </div>
@@ -160,3 +188,11 @@ function Chat() {
 }
 
 export default Chat
+
+const styles = {
+    picker : {
+        position:'absolute',
+        bottom:100,
+        left:100
+    }
+}
